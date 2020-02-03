@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -41,17 +42,6 @@ public class TranslatorServiceImpl implements TranslatorService {
     return translateResponse;
   }
 
-  @Override
-  @Async(ASYNC_TASKS_TRANSLATE_EXECUTOR)
-  public UUID createTranslateTaskAsync(String textFrom, String fromLang, String toLang, String clientIp) {
-    return null;
-  }
-
-  @Override
-  public TranslateResponse findTranslate(UUID id) {
-    return null;
-  }
-
   private String translateAsyncBy(TranslateResponse translateResponse, String translatorName) {
 
     Translator translator = translators.get(translatorName);
@@ -71,9 +61,28 @@ public class TranslatorServiceImpl implements TranslatorService {
         .join();
   }
 
+  @Override
+  @Async(ASYNC_TASKS_TRANSLATE_EXECUTOR)
+  public void createTranslateTaskAsync(String textFrom, String fromLang, String toLang, String clientIp, UUID id) {
+    TranslateResponse translateResponse = createTranslateResponse(textFrom, fromLang, toLang, clientIp, id);
+    translateDao.create(translateResponse);
+    String textTo = translateAsyncBy(translateResponse, YANDEX_BEAN_NAME);
+    translateResponse.setTextTo(textTo).setFinishedAt(Instant.now());
+    translateDao.update(translateResponse);
+  }
+
+  @Override
+  public Optional<TranslateResponse> findTranslate(UUID id) {
+    return translateDao.find(id);
+  }
+
   private TranslateResponse createTranslateResponse(String textFrom, String fromLang, String toLang, String clientIp) {
+    return createTranslateResponse(textFrom, fromLang, toLang, clientIp, UUID.randomUUID());
+  }
+
+  private TranslateResponse createTranslateResponse(String textFrom, String fromLang, String toLang, String clientIp, UUID id) {
     return new TranslateResponse()
-        .setId(UUID.randomUUID())
+        .setId(id)
         .setTextFrom(textFrom)
         .setFromLang(fromLang)
         .setToLang(toLang)

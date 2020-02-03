@@ -1,5 +1,6 @@
 package com.github.senin24.asynctranslate.service.api;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /** @author Pavel Senin */
@@ -25,7 +26,7 @@ public interface TranslatorService {
    * @param clientIp
    * @return
    */
-  UUID createTranslateTaskAsync(String textFrom, String fromLang, String toLang, String clientIp);
+  void createTranslateTaskAsync(String textFrom, String fromLang, String toLang, String clientIp, UUID id);
 
     /**
      * Поиск результатов перевода.
@@ -33,5 +34,5 @@ public interface TranslatorService {
      * @param id запроса перевода
      * @return
      */
-  TranslateResponse findTranslate(UUID id);
+  Optional<TranslateResponse> findTranslate(UUID id);
 }

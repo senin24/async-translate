@@ -11,14 +11,14 @@ import lombok.Data;
 public class TranslateRequestDto {
 
   @NotBlank
-  @ApiModelProperty(value = "Текст для перевода.")
+  @ApiModelProperty(value = "Текст для перевода.", example = "Часто спрашивают, что изучать первое - джаву или питон. А изучать надо английский")
   private String textFrom;
 
   @NotBlank
-  @ApiModelProperty(value = "Язык текста.", example = "en")
+  @ApiModelProperty(value = "Язык текста.", example = "ru")
   private String fromLang;
 
   @NotBlank
-  @ApiModelProperty(value = "На какой язык перевести.", example = "ru")
+  @ApiModelProperty(value = "На какой язык перевести.", example = "en")
   private String toLang;
 }
