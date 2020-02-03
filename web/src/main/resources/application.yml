@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: async-translate
+  datasource:
+    #    url: jdbc:h2:mem:example-app;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    #    url: jdbc:h2:mem:testdb
+    #    url: jdbc:h2:tcp://localhost:9090/~/testdb
+    url: jdbc:h2:tcp://localhost/mem:asynctranslate
+    driverClassName: org.h2.Driver
+    platform: h2
+    username: sa
+    password:
+    hikari:
+      maximum-pool-size: 30
+
+
+
+integratiom:
+  thread-pool-size: ${POOL_SIZE:5}
+  yandex:
+    url: ${YANDEX_URL:https://translate.yandex.net/}
+    apiKey: ${YANDEX_API_KEY:https://yandex.ru/dev/translate/doc/dg/reference/translate-docpage/} # https://translate.yandex.ru/developers/keys
+  google:
+    url: ${GOOGLE_URL:https://translation.googleapis.com/language/translate/v2}
+    apiKey: ${GOOGLE_API_KEY}
