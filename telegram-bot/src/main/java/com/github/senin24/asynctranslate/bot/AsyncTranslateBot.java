@@ -16,20 +16,19 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @AllArgsConstructor
 public class AsyncTranslateBot extends TelegramLongPollingBot {
 
-//  private final TranslatorService translatorService;
+  private final TranslatorService translatorService;
 
   @Override
   public void onUpdateReceived(Update update) {
     if (update.hasMessage() && update.getMessage().hasText()) {
 
-//      TranslateResponse translate =
-//          translatorService.translate(update.getMessage().getText(), "ru", "en", update.getMessage().getFrom().getUserName());
+      TranslateResponse translate =
+          translatorService.translate(update.getMessage().getText(), "ru", "en", update.getMessage().getFrom().getUserName());
 
       SendMessage message =
           new SendMessage()
               .setChatId(update.getMessage().getChatId())
-//              .setText("Привет, " + translate.getClientIp() + "! Перевод на английский: " + translate.getTextTo());
-              .setText("Привет, " + update.getMessage().getFrom().getUserName() + "!");
+              .setText("Привет, " + translate.getClientIp() + "! Перевод на английский: \n" + translate.toString());
       try {
         execute(message);
       } catch (TelegramApiException e) {

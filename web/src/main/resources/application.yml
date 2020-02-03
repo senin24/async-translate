@@ -22,7 +22,7 @@ integration:
   thread-pool-size: ${POOL_SIZE:5}
   yandex:
     url: ${YANDEX_URL:https://translate.yandex.net/api/v1.5/tr.json/}
-    apiKey: ${YANDEX_API_KEY:trnsl.1.1.20200202T194022Z.d6991622f7af713e.b4d12f4352cc8b778849d3efdab96b05636a003b} # https://translate.yandex.ru/developers/keys
+    apiKey: ${YANDEX_API_KEY:insert_your_api_key} # https://translate.yandex.ru/developers/keys
   google:
     url: ${GOOGLE_URL:https://translation.googleapis.com/language/translate/v2}
     apiKey: ${GOOGLE_API_KEY:some_google_api_key}

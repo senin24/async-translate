@@ -55,9 +55,10 @@ public class TranslatorServiceImpl implements TranslatorService {
   private String translateAsyncBy(TranslateResponse translateResponse, String translatorName) {
 
     Translator translator = translators.get(translatorName);
+    String[] words = translateResponse.getTextFrom().trim().replaceAll("[^a-zA-Zа-яА-Я ]", "").toLowerCase().split("\\s+");
 
     List<CompletableFuture<String>> futures =
-        Lists.newArrayList(translateResponse.getTextFrom().trim().split(" ")).stream()
+        Lists.newArrayList(words).stream()
             .map(
                 word ->
                     CompletableFuture.supplyAsync(
