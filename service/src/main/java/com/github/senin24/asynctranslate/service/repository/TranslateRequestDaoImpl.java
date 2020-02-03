@@ -38,7 +38,7 @@ public class TranslateRequestDaoImpl implements TranslateRequestDao {
     namedParameters.put("clientIp", translateResponse.getClientIp());
     namedParameters.put("createdAt", translateResponse.getCreatedAt());
     jdbcTemplate.update(
-        "insert into translate_requests ( id, text_from, from_lang, to_lang, client_ip, created_at) values (:id, :text_to, :fromLang, :toLang, :clientIp, :createdAt)",
+        "insert into translate_requests ( id, text_from, from_lang, to_lang, client_ip, created_at) values (:id, :textFrom, :fromLang, :toLang, :clientIp, :createdAt)",
         namedParameters);
   }
 

@@ -22,8 +22,8 @@ public class TranslateServiceConfig {
 
   public static final String TRANSLATE_EXECUTOR = "translate-executor";
   public static final String ASYNC_TASKS_TRANSLATE_EXECUTOR = "async-tasks-translate-executor";
-  public static final String YANDEX_QUALIFIER = "yandex";
-  public static final String GOOGLE_QUALIFIER = "google";
+  public static final String YANDEX_BEAN_NAME = "yandexTranslatorImpl";
+  public static final String GOOGLE_BEAN_NAME = "googleTranslatorImpl";
 
   private final IntegrationConfig config;
   private final RestTemplateBuilder restTemplateBuilder;
@@ -43,7 +43,6 @@ public class TranslateServiceConfig {
         config.getThreadPoolSize(),
         new ThreadFactory() {
           private int count = 1;
-
           @Override
           public Thread newThread(Runnable runnable) {
             return new Thread(runnable, TRANSLATE_EXECUTOR + "-" + count++);

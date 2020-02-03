@@ -1,12 +1,10 @@
 package com.github.senin24.asynctranslate.service.integration.yandex;
 
-import static com.github.senin24.asynctranslate.service.config.TranslateServiceConfig.YANDEX_QUALIFIER;
 import static java.util.Objects.isNull;
 
 import com.github.senin24.asynctranslate.service.config.IntegrationConfig;
 import com.github.senin24.asynctranslate.service.integration.Translator;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 /** @author Pavel Senin */
 @Component
 @AllArgsConstructor
-@Qualifier(YANDEX_QUALIFIER)
 public class YandexTranslatorImpl implements Translator {
 
   private final RestTemplate restTemplate;
@@ -29,12 +26,10 @@ public class YandexTranslatorImpl implements Translator {
   public String translate(String textFrom, String langFrom, String langTo) {
     HttpEntity<MultiValueMap<String, String>> request = createRequest(textFrom, langFrom, langTo);
 
-    ResponseEntity<YandexResponse> response = restTemplate.postForEntity(config.getYandex().getUrl(), request, YandexResponse.class);
+    ResponseEntity<YandexResponse> response =
+        restTemplate.postForEntity(config.getYandex().getUrl() + "translate", request, YandexResponse.class);
 
-    if (isNull(response)
-        || !response.getStatusCode().is2xxSuccessful()
-        || isNull(response.getBody())
-        || response.getBody().getText().isEmpty()) {
+    if (!response.getStatusCode().is2xxSuccessful() || isNull(response.getBody()) || response.getBody().getText().isEmpty()) {
       throw new RuntimeException("Can't get success response from Yandex-translate. Current response: " + response);
     }
 

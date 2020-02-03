@@ -1,7 +1,7 @@
 package com.github.senin24.asynctranslate.service.impl;
 
 import static com.github.senin24.asynctranslate.service.config.TranslateServiceConfig.ASYNC_TASKS_TRANSLATE_EXECUTOR;
-import static com.github.senin24.asynctranslate.service.config.TranslateServiceConfig.YANDEX_QUALIFIER;
+import static com.github.senin24.asynctranslate.service.config.TranslateServiceConfig.YANDEX_BEAN_NAME;
 
 import com.github.senin24.asynctranslate.service.api.TranslateResponse;
 import com.github.senin24.asynctranslate.service.api.TranslatorService;
@@ -35,7 +35,7 @@ public class TranslatorServiceImpl implements TranslatorService {
   public TranslateResponse translate(String textFrom, String fromLang, String toLang, String clientIp) {
     TranslateResponse translateResponse = createTranslateResponse(textFrom, fromLang, toLang, clientIp);
     translateDao.create(translateResponse);
-    String textTo = translateAsyncBy(translateResponse, YANDEX_QUALIFIER);
+    String textTo = translateAsyncBy(translateResponse, YANDEX_BEAN_NAME);
     translateResponse.setTextTo(textTo).setFinishedAt(Instant.now());
     translateDao.update(translateResponse);
     return translateResponse;
