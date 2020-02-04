@@ -22,7 +22,7 @@ public class AsyncTranslateBot extends TelegramLongPollingBot {
   @Value("${telegrambot.name}")
   private String botName;
 
-  @Value("${telegrambot.apikey")
+  @Value("${telegrambot.apikey}")
   private String apiKey;
 
   @Override
