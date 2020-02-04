@@ -1,6 +1,5 @@
 package com.github.senin24.asynctranslate.service.impl;
 
-import static com.github.senin24.asynctranslate.service.config.TranslateServiceConfig.ASYNC_TASKS_TRANSLATE_EXECUTOR;
 import static com.github.senin24.asynctranslate.service.config.TranslateServiceConfig.YANDEX_BEAN_NAME;
 
 import com.github.senin24.asynctranslate.service.api.TranslateResponse;
@@ -14,9 +13,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -28,9 +30,9 @@ public class TranslatorServiceImpl implements TranslatorService {
 
   private final Map<String, Translator> translators;
   private final TranslateRequestDao translateDao;
-
-  @Qualifier("translate-executor")
-  private final ExecutorService translateExecutor;
+  @NonNull
+  @Qualifier("online-translate-executor")
+  private final Executor translateExecutor;
 
   @Override
   public TranslateResponse translate(String textFrom, String fromLang, String toLang, String clientIp) {
@@ -43,26 +45,19 @@ public class TranslatorServiceImpl implements TranslatorService {
   }
 
   private String translateAsyncBy(TranslateResponse translateResponse, String translatorName) {
-
     Translator translator = translators.get(translatorName);
     String[] words = translateResponse.getTextFrom().trim().replaceAll("[^a-zA-Zа-яА-Я ]", "").toLowerCase().split("\\s+");
-
-    List<CompletableFuture<String>> futures =
-        Lists.newArrayList(words).stream()
-            .map(
-                word ->
-                    CompletableFuture.supplyAsync(
-                        () -> translator.translate(word, translateResponse.getFromLang(), translateResponse.getToLang()),
-                        translateExecutor))
-            .collect(Collectors.toList());
-
-    return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
-        .thenApply(aVoid -> futures.stream().map(CompletableFuture::join).collect(Collectors.joining(" ")))
-        .join();
+    return Stream.of(words)
+        .map(
+            word ->
+                CompletableFuture.supplyAsync(
+                    () -> translator.translate(word, translateResponse.getFromLang(), translateResponse.getToLang()), translateExecutor))
+        .map(CompletableFuture::join)
+        .collect(Collectors.joining(" "));
   }
 
   @Override
-  @Async(ASYNC_TASKS_TRANSLATE_EXECUTOR)
+  @Async("async-translate-tasks-executor")
   public void createTranslateTaskAsync(String textFrom, String fromLang, String toLang, String clientIp, UUID id) {
     TranslateResponse translateResponse = createTranslateResponse(textFrom, fromLang, toLang, clientIp, id);
     translateDao.create(translateResponse);

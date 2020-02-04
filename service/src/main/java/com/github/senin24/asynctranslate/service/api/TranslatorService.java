@@ -28,11 +28,11 @@ public interface TranslatorService {
    */
   void createTranslateTaskAsync(String textFrom, String fromLang, String toLang, String clientIp, UUID id);
 
-    /**
-     * Поиск результатов перевода.
-     *
-     * @param id запроса перевода
-     * @return
-     */
+  /**
+   * Поиск результатов перевода.
+   *
+   * @param id запроса перевода
+   * @return
+   */
   Optional<TranslateResponse> findTranslate(UUID id);
 }

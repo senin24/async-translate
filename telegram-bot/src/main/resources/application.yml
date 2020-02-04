@@ -1,30 +1,25 @@
 server:
   port: ${PORT:5000}
+
 spring:
   application:
     name: async-translate
   datasource:
-    #    url: jdbc:h2:mem:example-app;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    #    url: jdbc:h2:mem:testdb
-    #    url: jdbc:h2:tcp://localhost:9090/~/testdb
-#    url: jdbc:h2:tcp://localhost/mem:asynctranslate
-#    driverClassName: org.h2.Driver
-#    platform: h2
-#    username: sa
-#    password:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:h2:mem:default;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1
     platform: h2
     hikari:
       maximum-pool-size: 30
 
-
-
 integration:
   thread-pool-size: ${POOL_SIZE:5}
   yandex:
     url: ${YANDEX_URL:https://translate.yandex.net/api/v1.5/tr.json/}
-    apiKey: ${YANDEX_API_KEY:insert_your_api_key} # https://translate.yandex.ru/developers/keys
+    apiKey: ${YANDEX_API_KEY} # https://translate.yandex.ru/developers/keys
   google:
     url: ${GOOGLE_URL:https://translation.googleapis.com/language/translate/v2}
-    apiKey: ${GOOGLE_API_KEY:some_google_api_key}
+    apiKey: ${GOOGLE_API_KEY}
+
+telegrambot:
+  name: ${TELEGRAM_BOT_NAME:asyncTranslateBot}
+  apikey: ${TELEGRAM_BOT_API_KEY}

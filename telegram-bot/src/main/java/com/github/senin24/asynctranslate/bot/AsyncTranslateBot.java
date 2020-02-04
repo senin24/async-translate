@@ -2,8 +2,9 @@ package com.github.senin24.asynctranslate.bot;
 
 import com.github.senin24.asynctranslate.service.api.TranslateResponse;
 import com.github.senin24.asynctranslate.service.api.TranslatorService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -13,10 +14,16 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 /** @author Pavel_Senin */
 @Slf4j
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AsyncTranslateBot extends TelegramLongPollingBot {
 
   private final TranslatorService translatorService;
+
+  @Value("${telegrambot.name}")
+  private String botName;
+
+  @Value("${telegrambot.apikey")
+  private String apiKey;
 
   @Override
   public void onUpdateReceived(Update update) {
@@ -39,11 +46,11 @@ public class AsyncTranslateBot extends TelegramLongPollingBot {
 
   @Override
   public String getBotUsername() {
-    return "asyncTranslateBot";
+    return botName;
   }
 
   @Override
   public String getBotToken() {
-    return "1086436798:AAGPespcNYNqC9Bzpl9oAxXLMx8-CVuLAMA";
+    return apiKey;
   }
 }

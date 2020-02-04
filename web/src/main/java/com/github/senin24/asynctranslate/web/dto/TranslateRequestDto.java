@@ -4,9 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /** @author Pavel Senin */
 @Data
+@Accessors(chain = true)
 @Api(tags = "Запрос на перевод текста.")
 public class TranslateRequestDto {
 
